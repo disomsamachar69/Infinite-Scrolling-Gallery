@@ -1,4 +1,3 @@
-// components/ImageGallery.js
 import { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Modal from 'react-modal';
@@ -33,30 +32,23 @@ const ImageGallery = () => {
     setCurrentImage(null);
   };
 
-  const downloadImage = (url, filename) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-  };
-
   return (
     <>
       <InfiniteScroll
         dataLength={images.length}
         next={loadMoreImages}
         hasMore={true}
-        loader={<h4>Loading...</h4>}
-        endMessage={<p>No more images to show</p>}
+        loader={<h4 className="text-center text-white">Loading...</h4>}
+        endMessage={<p className="text-center text-white">No more images to show</p>}
       >
-        <div className="image-grid">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((image) => (
-            <div key={image.id} className="image-item">
+            <div key={image.id} className="relative">
               <img
                 src={image.src.medium}
                 alt={image.photographer}
                 onClick={() => openModal(image)}
-                style={{ cursor: 'pointer' }}
+                className="w-full h-auto cursor-pointer"
               />
             </div>
           ))}
@@ -67,12 +59,27 @@ const ImageGallery = () => {
         isOpen={isOpen}
         onRequestClose={closeModal}
         contentLabel="Image Preview"
-        className="Modal"
-        overlayClassName="Overlay"
+        className="fixed inset-0 flex items-center justify-center p-4"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
         shouldCloseOnOverlayClick={true}
         shouldCloseOnEsc={true}
       >
-        {currentImage && <img src={currentImage} alt="Preview" style={{ width: '100%' }} />}
+        <div className="relative bg-white p-4 max-w-screen-sm mx-auto rounded">
+          <button
+            onClick={closeModal}
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          {currentImage && (
+            <img
+              src={currentImage}
+              alt="Preview"
+              className="w-full h-auto"
+            />
+          )}
+        </div>
       </Modal>
     </>
   );
